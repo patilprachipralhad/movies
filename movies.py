@@ -116,6 +116,16 @@ def display_shared_reviews(user_id):
     return reviews
 
 
+def share_review(review_id, shared_with):
+    conn = connect_db()
+    cursor = conn.cursor()
+    cursor.execute("UPDATE reviews SET shared_with=%s WHERE id=%s", (shared_with, review_id))
+    conn.commit()
+    cursor.close()
+    conn.close()
+    print("Review shared successfully!")
+
+
 def menu():
     while True:
         print("\nMovie Review System")
@@ -130,7 +140,8 @@ def menu():
         print("9. Display All Reviews")
         print("10. Display My Reviews")
         print("11. Display Shared Reviews")
-        print("12. Exit")
+        print("12. Share Review")
+        print("13. Exit")
 
         choice = int(input("Enter your choice: "))
 
@@ -184,11 +195,15 @@ def menu():
             for review in reviews:
                 print(review)
         elif choice == 12:
+            review_id = int(input("Enter Review ID: "))
+            shared_with = int(input("Enter User ID to share with: "))
+            share_review(review_id, shared_with)
+        elif choice == 13:
             print("Exiting...")
             break
         else:
             print("Invalid Choice! Please try again.")
 
 
-
-menu()
+if __name__ == "__main__":
+    menu()
